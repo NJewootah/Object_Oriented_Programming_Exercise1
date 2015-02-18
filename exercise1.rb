@@ -1,4 +1,13 @@
+module Arraymod
+  def list_array(type)
+    type.each do |i|
+      puts i
+    end
+  end
+end
+
 class Person
+include Arraymod
 attr_accessor :fname,:sname,:dob,:fullname
 attr_reader :emails,:phone_numbers
 
@@ -35,26 +44,54 @@ attr_reader :emails,:phone_numbers
     end  
   end
 
-  def list_array(type)
-    type.each do |i|
-      puts i
-  end
-end
-
   def print_details()
-    puts "#{@fullname}\n"
-    puts "--------------\n"
+    puts "#{@fullname}"
+    puts "--------------"
     if @dob != nil
-      puts "DOB: #{@dob}\n\n"
+      puts "DOB: #{@dob}"
     end
-    puts "Email Addresses:\n"
+    puts "\nEmail Addresses:"
     puts list_array(@emails)
-    puts "\nPhone Numbers:\n"
+    puts "\nPhone Numbers:"
     puts list_array(@phone_numbers)
   end
-
 end
 
+
+class FamilyMember < Person
+  attr_accessor :relationship
+
+  def initialize(fname,sname,dob = nil)
+    @relationship = relationship
+    super
+  end
+end
+
+
+class AddressBook
+include Arraymod
+  def initialize
+    @contacts = []
+  end
+
+  def add(person)
+    if person.is_a?Person
+      p = person.fullname
+      @contacts << p
+    else
+      puts "Please use an object of Person"
+    end
+  end
+
+  def list()
+    puts "\n\nAddress Book:"
+    puts "--------------"
+    @contacts.each_with_index {|item, index|
+    puts "Entry #{index + 1}: #{item}"}
+  end
+end
+
+#TEST DATA---------------------------------------
 
 p1 = Person.new('Nini','Jewootah','11 October 1991')
 
@@ -69,30 +106,11 @@ p1.remove_phone('02086414175')
 puts p1.to_s
 p1.print_details()
 
+p2 = Person.new('Nini2','Jewootah2','11 October 1991')
+p3 = Person.new('Nini3','Jewootah3','11 October 1991')
 
-class FamilyMember < Person
-  attr_reader :relationship
-
-  def initialize(fname,sname,relationship,dob = nil)
-    @relationship = relationship
-    super
-  end
-end
-
-class AddressBook
-  def initialize
-    @contacts = []
-  end
-
-  def add(person)
-    if person.is_a?Person
-      @contacts << person
-    else
-      puts "Please use an object of Person"
-    end
-  end
-
-end
-
-
-
+book = AddressBook.new
+book.add(p1)
+book.add(p2)
+book.add(p3)
+book.list
