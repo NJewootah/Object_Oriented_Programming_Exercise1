@@ -6,14 +6,15 @@ module Arraymod
   end
 end
 
+require 'Date'
+
 class Person
-include Arraymod
-attr_accessor :fname,:sname,:dob,:fullname
-attr_reader :emails,:phone_numbers
+  include Arraymod
+  attr_accessor :fname,:sname,:dob,:fullname
+  attr_reader :emails,:phone_numbers
 
   def initialize(fname,sname,dob = nil)
-    @dob = dob
-    @fullname = fname + ' ' + sname
+    @dob = Date.parse(dob)
     @emails = []
     @phone_numbers = []
   end
@@ -34,6 +35,10 @@ attr_reader :emails,:phone_numbers
     @phone_numbers.delete(phone)
   end
 
+  def fullname
+    "#{@fname} #{@sname}"
+  end
+
   def to_s
     if @dob != nil
       puts "#{@fullname} was born on #{@dob}.His email addresses are 
@@ -45,10 +50,10 @@ attr_reader :emails,:phone_numbers
   end
 
   def print_details()
-    puts "#{@fullname}"
-    puts "--------------"
+    puts fullname
+    puts "-" * fullname.length
     if @dob != nil
-      puts "DOB: #{@dob}"
+      puts Date.strptime("#{@dob}, '%d %m %Y'")
     end
     puts "\nEmail Addresses:"
     puts list_array(@emails)
@@ -61,7 +66,7 @@ end
 class FamilyMember < Person
   attr_accessor :relationship
 
-  def initialize(fname,sname,dob = nil)
+  def initialize(relationship = "relative",*args)
     @relationship = relationship
     super
   end
@@ -69,7 +74,8 @@ end
 
 
 class AddressBook
-include Arraymod
+  include Arraymod
+
   def initialize
     @contacts = []
   end
@@ -85,7 +91,7 @@ include Arraymod
 
   def list()
     puts "\n\nAddress Book:"
-    puts "--------------"
+    puts "-------------"
     @contacts.each_with_index {|item, index|
     puts "Entry #{index + 1}: #{item}"}
   end
